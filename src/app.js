@@ -28,7 +28,7 @@ const NotFoundPage = () => (
 const routes = (
     <BrowserRouter>
         <Switch>
-            <Route path="/" component={ExpenseDashboardPage} />
+            <Route path="/" component={ExpenseDashboardPage} exact={true} />
             <Route path="/create" component={ExpenseCreatePage} />
             <Route path="/edit" component={ExpenseEditPage} />
             <Route path="/help" component={HelpPage} />
