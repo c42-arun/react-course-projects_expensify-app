@@ -23,6 +23,8 @@ module.exports = {
     },
     devtool: 'cheap-module-eval-source-map',
     devServer: {
-        contentBase: path.join(__dirname, 'public')
+        contentBase: path.join(__dirname, 'public'),
+        historyApiFallback: true    // to serve index.html for any 404 so that any client-side route entered directly in 
+                                    // address bar is handled by client-side javascript that kicks in upon loading index.html        
     }
 }
