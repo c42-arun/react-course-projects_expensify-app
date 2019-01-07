@@ -22,6 +22,11 @@ const removeExpense = ( { id:expenseId }) => ({
 });
 
 // EDIT_EXPENSE
+const editExpense = (id, updateValues) => ({
+    type: 'EDIT_EXPENSE',
+    id,
+    updateValues
+});
 
 // Expenses Reducer
 const expensesReducerDefaultState = [];
@@ -38,6 +43,18 @@ const expensesReducer = (state = expensesReducerDefaultState, action) => {
 
         case 'REMOVE_EXPENSE':
             return state.filter(({ id }) => id !== action.expenseId); // notice param obj de-structuring
+
+        case 'EDIT_EXPENSE':
+            return state.map(expense => {
+                if (expense.id === action.id) {
+                    return {
+                        ...expense,
+                        ...action.updateValues
+                    };
+                } else {
+                    return expense;
+                }
+            });
 
         default:
             return state;
@@ -82,11 +99,16 @@ store.subscribe(() => {
 
 // NOTE: All actions would be dispatch to all registered reducers. Only the reducer concerned 
 // with a particular action would handle it, others would simply returns the state unchanged.
+
+// dispatch() returns the action object passed to it
 const expenseOne = store.dispatch(addExpense({ description: 'Rent', amount: 85000 }));
 const expenseTwo = store.dispatch(addExpense({ description: 'Coffee', amount: 250 }));
 
 // remove 'expenseOne'
 store.dispatch(removeExpense(expenseOne.expense));
+
+// edit 'expenseTwo' to update amount to 500
+store.dispatch(editExpense(expenseTwo.expense.id, { amount: 500 }));
 
 const demoState = {
     expenses: [{
@@ -103,12 +125,3 @@ const demoState = {
         endDate: undefined
     }
 };
-
-const user = {
-    name: 'Arun',
-    age: 16
-};
-
-console.log({
-    ...user
-});
