@@ -3,7 +3,7 @@ import uuid from 'uuid';
 
 // ** Expense Actions **
 // ADD_EXPENSE
-const addExpense = ( { description='', note='', amount=0 } = {}) => ({
+const addExpense = ({ description = '', note = '', amount = 0 } = {}) => ({
     type: 'ADD_EXPENSE',
     expense: {
         id: uuid(),
@@ -16,7 +16,7 @@ const addExpense = ( { description='', note='', amount=0 } = {}) => ({
 // REMOVE_EXPENSE
 // Incoming param object { id, description, note, amount } de-structured to 
 // only pick out 'id' then rename it
-const removeExpense = ( { id:expenseId }) => ({
+const removeExpense = ({ id: expenseId }) => ({
     type: 'REMOVE_EXPENSE',
     expenseId
 });
@@ -69,15 +69,32 @@ const setTextFilter = (text = '') => ({
     text
 });
 
-// SET_SORT_BY_AMOUNT
-// SET_SORT_BY_DATE
-// FILTER_BY_START_DATE
-// FILTER_BY_END_DATE
+// SORT_BY_AMOUNT
+const sortByAmount = () => ({
+    type: 'SORT_BY_AMOUNT'
+});
+
+// SORT_BY_DATE
+const sortByDate = () => ({
+    type: 'SORT_BY_DATE'
+});
+
+// SET_START_DATE
+const setStartDate = (startDate) => ({
+    type: 'SET_START_DATE',
+    startDate
+});
+
+// SET_END_DATE
+const setEndDate = (endDate) => ({
+    type: 'SET_END_DATE',
+    endDate
+});
 
 // Filters Reducer
 const filtersReducerDefaultState = {
     text: '',
-    sortyBy: 'date',
+    sortBy: 'date',
     startDate: undefined,
     endDate: undefined
 };
@@ -89,6 +106,31 @@ const filtersReducer = (state = filtersReducerDefaultState, action) => {
                 ...state,
                 text: action.text
             };
+
+        case 'SORT_BY_AMOUNT':
+            return {
+                ...state,
+                sortBy: 'amount'
+            };
+
+        case 'SORT_BY_DATE':
+            return {
+                ...state,
+                sortBy: 'date'
+            };
+
+        case 'SET_START_DATE':
+            return {
+                ...state,
+                startDate: action.startDate
+            };
+
+        case 'SET_END_DATE':
+            return {
+                ...state,
+                endDate: action.endDate
+            };
+
 
         default:
             return state;
@@ -105,26 +147,32 @@ const store = createStore(
 );
 
 store.subscribe(() => {
-    console.log(store.getState()); 
+    console.log(store.getState());
 });
 
 // NOTE: All actions would be dispatch to all registered reducers. Only the reducer concerned 
 // with a particular action would handle it, others would simply returns the state unchanged.
 
-// dispatch() returns the action object passed to it
-const expenseOne = store.dispatch(addExpense({ description: 'Rent', amount: 85000 }));
-const expenseTwo = store.dispatch(addExpense({ description: 'Coffee', amount: 250 }));
+// // dispatch() returns the action object passed to it
+// const expenseOne = store.dispatch(addExpense({ description: 'Rent', amount: 85000 }));
+// const expenseTwo = store.dispatch(addExpense({ description: 'Coffee', amount: 250 }));
 
-// remove 'expenseOne'
-store.dispatch(removeExpense(expenseOne.expense));
+// // remove 'expenseOne'
+// store.dispatch(removeExpense(expenseOne.expense));
 
-// edit 'expenseTwo' to update amount to 500
-store.dispatch(editExpense(expenseTwo.expense.id, { amount: 500 }));
+// // edit 'expenseTwo' to update amount to 500
+// store.dispatch(editExpense(expenseTwo.expense.id, { amount: 500 }));
 
 
-// set text filter 
-store.dispatch(setTextFilter('rent'));
-store.dispatch(setTextFilter());
+// store.dispatch(setTextFilter('rent'));
+// store.dispatch(setTextFilter());
+
+// store.dispatch(sortByAmount());
+// store.dispatch(sortByDate());
+
+store.dispatch(setStartDate(125));
+store.dispatch(setStartDate());
+store.dispatch(setEndDate(1250));
 
 const demoState = {
     expenses: [{
