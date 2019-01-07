@@ -62,6 +62,8 @@ store.dispatch({
 });
 
 // subscription is called even if the action isn't defined
+// -- returns state unchanged due to 'default' handler in reducer
+// -- if no handler then store.getState() returns undefined
 store.dispatch({
     type: 'DOES_NOT_EXIST'
 });
