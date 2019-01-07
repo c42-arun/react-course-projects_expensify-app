@@ -20,12 +20,13 @@ const resetCount = () => ({
 });
 
 // required payload, so no defaults
+// will thror type error if no payload is passed
 const setCount = ({ count }) => ({
     type: 'SET',
     count
 });
 
-const store = createStore((state = { count: 0 }, action) => {
+const countReducer = (state = { count: 0 }, action) => {
     switch (action.type) {
         case 'INCREMENT':
             // NO LONGER NEED THIS CHECK IN HERE - MOVED TO incrementCount() action generator
@@ -52,7 +53,9 @@ const store = createStore((state = { count: 0 }, action) => {
         default:
             return state;
     }
-});
+};
+
+const store = createStore(countReducer);
 
 // subscribe to any action calls into reducer 
 // also returns a function to unsubscribe at any time
@@ -82,7 +85,8 @@ store.dispatch({
     type: 'DOES_NOT_EXIST'
 });
 
-// prints {count: undefined}
+// throws exception in setCount() action generator
+// when it tries to de-structure off an undefined param
 store.dispatch(setCount());
 
 // unsubsribe from store changes (i.e whenever reducer function is called)
