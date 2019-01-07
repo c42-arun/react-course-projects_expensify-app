@@ -1,16 +1,42 @@
 import { createStore } from 'redux';
 
+// Action generators: functions that return action objects
+
+// notice obj de-structuring/default value in param
+// also param itself has a default of empty object
+const incrementCount = ({ incrementBy = 1 } = {}) => ({ 
+    type: 'INCREMENT',
+    incrementBy//: incrementBy - if property-name equals variable name then simply omit property name
+});
+
+const decrementCount = ({ decrementBy = 1 } = {}) => ({
+    type: 'DECREMENT',
+    decrementBy
+});
+
+// no payload required
+const resetCount = () => ({
+    type: 'RESET'
+});
+
+// required payload, so no defaults
+const setCount = ({ count }) => ({
+    type: 'SET',
+    count
+});
+
 const store = createStore((state = { count: 0 }, action) => {
     switch (action.type) {
         case 'INCREMENT':
-            const incrementBy = typeof action.incrementBy === 'number' ? action.incrementBy : 1;
+            // NO LONGER NEED THIS CHECK IN HERE - MOVED TO incrementCount() action generator
+            // const incrementBy = typeof action.incrementBy === 'number' ? action.incrementBy : 1;
             return {
-                count: state.count + incrementBy
+                count: state.count + action.incrementBy
             }
 
         case 'DECREMENT':
             return {
-                count: state.count - 1
+                count: state.count - action.decrementBy
             }
 
         case 'RESET':
@@ -20,7 +46,7 @@ const store = createStore((state = { count: 0 }, action) => {
 
         case 'SET':
             return {
-                count: action.setValue
+                count: action.count
             }
 
         default:
@@ -35,31 +61,19 @@ const unsubscribe = store.subscribe(() => {
 });
 
 // prints {count: 1}
-store.dispatch({
-    type: 'INCREMENT'
-});
+store.dispatch(incrementCount());
 
 // NOTE: another member to pass additional data - prints {count: 6}
-store.dispatch({
-    type: 'INCREMENT',
-    incrementBy: 5
-});
+store.dispatch(incrementCount({ incrementBy: 5}));
 
 // prints {count: 5}
-store.dispatch({
-    type: 'DECREMENT'
-});
+store.dispatch(decrementCount());
 
 // prints {count: 0}
-store.dispatch({
-    type: 'RESET'
-});
+store.dispatch(resetCount());
 
 // prints {count: -10}
-store.dispatch({
-    type: 'SET',
-    setValue: -10
-});
+store.dispatch(setCount({ count: 10 }));
 
 // subscription is called even if the action isn't defined
 // -- returns state unchanged due to 'default' handler in reducer
@@ -69,16 +83,10 @@ store.dispatch({
 });
 
 // prints {count: undefined}
-store.dispatch({
-    type: 'SET',
-    // setValue: -10
-});
+store.dispatch(setCount());
 
 // unsubsribe from store changes (i.e whenever reducer function is called)
 unsubscribe();
 
 // unsubscribe not called so no console.log()
-store.dispatch({
-    type: 'SET',
-    setValue: 100
-});
+store.dispatch(setCount({ count: 100 }));
