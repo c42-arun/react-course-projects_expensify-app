@@ -14,6 +14,13 @@ const addExpense = ( { description='', note='', amount=0 } = {}) => ({
 });
 
 // REMOVE_EXPENSE
+// Incoming param object { id, description, note, amount } de-structured to 
+// only pick out 'id' then rename it
+const removeExpense = ( { id:expenseId }) => ({
+    type: 'REMOVE_EXPENSE',
+    expenseId
+});
+
 // EDIT_EXPENSE
 
 // Expenses Reducer
@@ -28,6 +35,9 @@ const expensesReducer = (state = expensesReducerDefaultState, action) => {
                 ...state,
                 action.expense
             ];
+
+        case 'REMOVE_EXPENSE':
+            return state.filter(({ id }) => id !== action.expenseId); // notice param obj de-structuring
 
         default:
             return state;
@@ -74,6 +84,9 @@ store.subscribe(() => {
 // with a particular action would handle it, others would simply returns the state unchanged.
 const expenseOne = store.dispatch(addExpense({ description: 'Rent', amount: 85000 }));
 const expenseTwo = store.dispatch(addExpense({ description: 'Coffee', amount: 250 }));
+
+// remove 'expenseOne'
+store.dispatch(removeExpense(expenseOne.expense));
 
 const demoState = {
     expenses: [{
