@@ -63,7 +63,12 @@ const expensesReducer = (state = expensesReducerDefaultState, action) => {
 
 
 // ** Filter Actions **
-// SET_FILTER_TEXT
+// SET_TEXT_FILTER
+const setTextFilter = (text = '') => ({
+    type: 'SET_TEXT_FILTER',
+    text
+});
+
 // SET_SORT_BY_AMOUNT
 // SET_SORT_BY_DATE
 // FILTER_BY_START_DATE
@@ -79,6 +84,12 @@ const filtersReducerDefaultState = {
 
 const filtersReducer = (state = filtersReducerDefaultState, action) => {
     switch (action.type) {
+        case 'SET_TEXT_FILTER':
+            return {
+                ...state,
+                text: action.text
+            };
+
         default:
             return state;
     }
@@ -109,6 +120,11 @@ store.dispatch(removeExpense(expenseOne.expense));
 
 // edit 'expenseTwo' to update amount to 500
 store.dispatch(editExpense(expenseTwo.expense.id, { amount: 500 }));
+
+
+// set text filter 
+store.dispatch(setTextFilter('rent'));
+store.dispatch(setTextFilter());
 
 const demoState = {
     expenses: [{
