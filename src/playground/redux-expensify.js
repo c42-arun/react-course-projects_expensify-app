@@ -109,18 +109,6 @@ const filtersReducer = (state = filtersReducerDefaultState, action) => {
                 text: action.text
             };
 
-        case 'SORT_BY_AMOUNT':
-            return {
-                ...state,
-                sortBy: 'amount'
-            };
-
-        case 'SORT_BY_DATE':
-            return {
-                ...state,
-                sortBy: 'date'
-            };
-
         case 'SET_START_DATE':
             return {
                 ...state,
@@ -133,6 +121,17 @@ const filtersReducer = (state = filtersReducerDefaultState, action) => {
                 endDate: action.endDate
             };
 
+        case 'SORT_BY_AMOUNT':
+            return {
+                ...state,
+                sortBy: 'amount'
+            };
+
+        case 'SORT_BY_DATE':
+            return {
+                ...state,
+                sortBy: 'date'
+            };
 
         default:
             return state;
@@ -148,15 +147,23 @@ const store = createStore(
     })
 );
 
-const getVisibleExpenses = (expenses, { startDate, endDate, text }) => {
+const getVisibleExpenses = (expenses, { startDate, endDate, text, sortBy }) => {
     return expenses.filter(e => {
         const startDateMatch = typeof startDate !== 'number' || e.createdAt >= startDate;
         const endDateMatch = typeof endDate !== 'number' || e.createdAt <= endDate;
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
         const textMatch = typeof text !== 'string' || text.length === 0
             || e.description.toLowerCase().includes(text.toLowerCase());
 
         return startDateMatch && endDateMatch && textMatch;
-    })
+    }).sort((a, b) => {
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+        if (sortBy === 'date') {
+            return a.createdAt < b.createdAt ? 1 : -1; // sort by descending dates
+        } else if (sortBy === 'amount') {
+            return a.amount < b.amount ? 1 : -1; // sort by descending amounts
+        }
+    });
 }
 
 store.subscribe(() => {
@@ -170,7 +177,7 @@ store.subscribe(() => {
 // with a particular action would handle it, others would simply returns the state unchanged.
 
 // // dispatch() returns the action object passed to it
-const expenseOne = store.dispatch(addExpense({ description: 'Rent', amount: 85000, createdAt: 1000 }));
+const expenseOne = store.dispatch(addExpense({ description: 'Rent', amount: 85, createdAt: -21000 }));
 const expenseTwo = store.dispatch(addExpense({ description: 'Coffee', amount: 250, createdAt: -1000 }));
 
 // // remove 'expenseOne'
@@ -180,7 +187,7 @@ const expenseTwo = store.dispatch(addExpense({ description: 'Coffee', amount: 25
 // store.dispatch(editExpense(expenseTwo.expense.id, { amount: 500 }));
 
 
-store.dispatch(setTextFilter('ren'));
+// store.dispatch(setTextFilter('ren'));
 // store.dispatch(setTextFilter());
 
 // store.dispatch(sortByAmount());
@@ -189,6 +196,9 @@ store.dispatch(setTextFilter('ren'));
 // store.dispatch(setStartDate(100));
 // store.dispatch(setStartDate());
 // store.dispatch(setEndDate(1250));
+
+store.dispatch(sortByDate());
+store.dispatch(sortByAmount());
 
 const demoState = {
     expenses: [{
