@@ -1,15 +1,17 @@
 import { createStore, combineReducers } from 'redux';
 import uuid from 'uuid';
+import { EEXIST } from 'constants';
 
 // ** Expense Actions **
 // ADD_EXPENSE
-const addExpense = ({ description = '', note = '', amount = 0 } = {}) => ({
+const addExpense = ({ description = '', note = '', amount = 0, createdAt = 0 } = {}) => ({
     type: 'ADD_EXPENSE',
     expense: {
         id: uuid(),
         description,
         note,
-        amount
+        amount,
+        createdAt
     }
 });
 
@@ -146,16 +148,30 @@ const store = createStore(
     })
 );
 
+const getVisibleExpenses = (expenses, { startDate, endDate, text }) => {
+    return expenses.filter(e => {
+        const startDateMatch = typeof startDate !== 'number' || e.createdAt >= startDate;
+        const endDateMatch = typeof endDate !== 'number' || e.createdAt <= endDate;
+        const textMatch = typeof text !== 'string' || text.length === 0
+            || e.description.toLowerCase().includes(text.toLowerCase());
+
+        return startDateMatch && endDateMatch && textMatch;
+    })
+}
+
 store.subscribe(() => {
-    console.log(store.getState());
+    const state = store.getState();
+    const visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
+    console.log(visibleExpenses);
 });
+
 
 // NOTE: All actions would be dispatch to all registered reducers. Only the reducer concerned 
 // with a particular action would handle it, others would simply returns the state unchanged.
 
 // // dispatch() returns the action object passed to it
-// const expenseOne = store.dispatch(addExpense({ description: 'Rent', amount: 85000 }));
-// const expenseTwo = store.dispatch(addExpense({ description: 'Coffee', amount: 250 }));
+const expenseOne = store.dispatch(addExpense({ description: 'Rent', amount: 85000, createdAt: 1000 }));
+const expenseTwo = store.dispatch(addExpense({ description: 'Coffee', amount: 250, createdAt: -1000 }));
 
 // // remove 'expenseOne'
 // store.dispatch(removeExpense(expenseOne.expense));
@@ -164,15 +180,15 @@ store.subscribe(() => {
 // store.dispatch(editExpense(expenseTwo.expense.id, { amount: 500 }));
 
 
-// store.dispatch(setTextFilter('rent'));
+store.dispatch(setTextFilter('ren'));
 // store.dispatch(setTextFilter());
 
 // store.dispatch(sortByAmount());
 // store.dispatch(sortByDate());
 
-store.dispatch(setStartDate(125));
-store.dispatch(setStartDate());
-store.dispatch(setEndDate(1250));
+// store.dispatch(setStartDate(100));
+// store.dispatch(setStartDate());
+// store.dispatch(setEndDate(1250));
 
 const demoState = {
     expenses: [{
@@ -183,7 +199,7 @@ const demoState = {
         createdAt: 0
     }],
     filters: {
-        text: 'rent',
+        text: '',
         sortBy: 'amount', // date or amount
         startDate: undefined,
         endDate: undefined
