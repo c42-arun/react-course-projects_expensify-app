@@ -15,20 +15,38 @@ const Info = (props) => (
     </div>
 );
 
-// A plain old JS function that takes in a React component 
-// and returns a HOC that wraps that component
-const withAdminWarning = (WrappedComponent) => {
-    // return HOC
+// // A plain old JS function that takes in a React component 
+// // and returns a HOC that wraps that component
+// const withAdminWarning = (WrappedComponent) => {
+//     // return HOC
+//     return (props) => (
+//         <div>
+//             { props.isAdmin && <p>This is an admin only area!</p> }
+//             <WrappedComponent {...props} />
+//         </div>
+//     )
+// };
+
+// // Create the HOC by calling the function
+// const AdminInfo = withAdminWarning(Info);
+
+// // Render the HOC
+// ReactDOM.render(<AdminInfo isAdmin={false} info='This is the secret key: FFDTS' />, document.getElementById('app'));
+
+const requireAuthentication = (WrappedComponent) => {
+    // stateless functional component
     return (props) => (
         <div>
-            { props.isAdmin && <p>This is an admin only area!</p> }
-            <WrappedComponent {...props} />
+            {props.isAuthenticated ? (
+                <WrappedComponent {...props} />
+            ) : (
+                    <p>Please login to view this page!</p>
+                )}
         </div>
-    )
+    );
 };
 
-// Create the HOC by calling the function
-const AdminInfo = withAdminWarning(Info);
+const AuthenticatedInfo = requireAuthentication(Info);
 
-// Render the HOC
-ReactDOM.render(<AdminInfo isAdmin={false} info='This is the secret key: FFDTS' />, document.getElementById('app'));
+//ReactDOM.render(<AuthenticatedInfo info='Secret password: 7676gg'/>, document.getElementById('app'));
+ReactDOM.render(<AuthenticatedInfo isAuthenticated={true} info='Secret password: 7676gg' />, document.getElementById('app'));
