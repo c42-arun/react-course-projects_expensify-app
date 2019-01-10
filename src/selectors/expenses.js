@@ -1,4 +1,4 @@
-export default getVisibleExpenses = (expenses, { startDate, endDate, text, sortBy }) => {
+export default (expenses, { startDate, endDate, text, sortBy }) => {
     return expenses.filter(e => {
         const startDateMatch = typeof startDate !== 'number' || e.createdAt >= startDate;
         const endDateMatch = typeof endDate !== 'number' || e.createdAt <= endDate;
@@ -15,4 +15,4 @@ export default getVisibleExpenses = (expenses, { startDate, endDate, text, sortB
             return a.amount < b.amount ? 1 : -1; // sort by descending amounts
         }
     });
-}
+};
