@@ -21,7 +21,7 @@ const withAdminWarning = (WrappedComponent) => {
     // return HOC
     return (props) => (
         <div>
-            <p>This is an admin only area!</p>
+            { props.isAdmin && <p>This is an admin only area!</p> }
             <WrappedComponent {...props} />
         </div>
     )
@@ -31,4 +31,4 @@ const withAdminWarning = (WrappedComponent) => {
 const AdminInfo = withAdminWarning(Info);
 
 // Render the HOC
-ReactDOM.render(<AdminInfo info='This is the secret key: FFDTS' />, document.getElementById('app'));
+ReactDOM.render(<AdminInfo isAdmin={false} info='This is the secret key: FFDTS' />, document.getElementById('app'));
