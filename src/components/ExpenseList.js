@@ -1,12 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import ExpenseListItem from './ExpenseListItem';
+
 // plain old stateless function component (POSFC)
 // - props gets injected by the HOC; which is nothing but the state we pass in to the HOC creating function (line 20)
 const ExpenseList = (props) => (
     <div>
         Expense List
-        <p>{props.expenses.length}</p>
+        {props.expenses.map((expense) => (
+            <ExpenseListItem key={expense.id} {...expense} /> // note the spread operator to pass individual propeties as props
+        ))}
     </div>
 );
 
