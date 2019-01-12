@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import 'normalize.css/normalize.css'
 import './styles/styles.scss';
 
@@ -32,10 +33,15 @@ store.dispatch(setTextFilter('water'));
 state = store.getState();
 
 // test selector
-let visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
+visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
 console.log(visibleExpenses);
 
 /** REDUX DEMO END */ 
 
+const jsx = (
+    <Provider store={store}>
+        <AppRouter />
+    </Provider>
+);
 
-ReactDOM.render(<AppRouter />, document.getElementById('app'));
+ReactDOM.render(jsx, document.getElementById('app'));
