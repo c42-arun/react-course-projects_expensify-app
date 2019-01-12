@@ -17,10 +17,12 @@ const ExpenseList = (props) => (
 //                                                                      that is primed with the required state
 // - connect(<callback returning the state reqd by WrappedComponent>)(<WrappedComponent>) -> 
 //                  the function is now called so our component is wrapped within HOC and gets the state passed in
-const ConnectedComponent = connect((state) => {
+
+const mapStateToProps = (state) => {
     return {
         expenses: state.expenses
-    }
-})(ExpenseList);
+    };
+};
 
-export default ConnectedComponent;
+export default connect(mapStateToProps)(ExpenseList);
+
