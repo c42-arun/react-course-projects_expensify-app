@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import ExpenseListItem from './ExpenseListItem';
+import selectExpenses from '../selectors/expenses';
 
 // plain old stateless function component (POSFC)
 // - props gets injected by the HOC; which is nothing but the state we pass in to the HOC creating function (line 20)
@@ -24,7 +25,7 @@ const ExpenseList = (props) => (
 
 const mapStateToProps = (state) => {
     return {
-        expenses: state.expenses
+        expenses: selectExpenses(state.expenses, state.filters)
     };
 };
 

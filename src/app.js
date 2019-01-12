@@ -37,6 +37,11 @@ store.dispatch(setStartDate());
 store.dispatch(setTextFilter('water'));
 state = store.getState();
 
+setTimeout(() => {
+    store.dispatch(setTextFilter());
+}, 6000);
+
+
 // test selector
 visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
 console.log(visibleExpenses);
