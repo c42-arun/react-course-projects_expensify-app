@@ -2,10 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 // plain old stateless function component (POSFC)
+// - props gets injected by the HOC; which is nothing but the state we pass in to the HOC creating function (line 20)
 const ExpenseList = (props) => (
     <div>
         Expense List
-        <p>{props.name}</p>
+        <p>{props.expenses.length}</p>
     </div>
 );
 
@@ -16,9 +17,9 @@ const ExpenseList = (props) => (
 //                                                                      that is primed with the required state
 // - connect(<callback returning the state reqd by WrappedComponent>)(<WrappedComponent>) -> 
 //                  the function is now called so our component is wrapped within HOC and gets the state passed in
-const ConnectedComponent = connect(() => {
+const ConnectedComponent = connect((state) => {
     return {
-        name: 'Arun'
+        expenses: state.expenses
     }
 })(ExpenseList);
 
