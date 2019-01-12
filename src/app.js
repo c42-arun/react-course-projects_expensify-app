@@ -19,6 +19,11 @@ const store = configureStore();
 store.dispatch(addExpense({ description: 'Water bill', amount: 2700, createdAt: 720000 }));
 store.dispatch(addExpense({ description: 'Gas bill', amount: 5400, createdAt: 950000 }));
 
+// adds another expense after 3 seconds - so it shows in ExpenseList automatically (just the count for now)
+setTimeout(() => {
+    store.dispatch(addExpense({ description: 'Leccy bill', amount: 2000, createdAt: 10000000 }));
+}, 3000);
+
 // actions - add view filters to state
 store.dispatch(setStartDate(730000));
 let state = store.getState();
