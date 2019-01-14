@@ -10,11 +10,11 @@ const EditExpensePage = ({ history, dispatch, expense }) => {
         <div>
             <ExpenseForm
                 expense={expense}
-                onSubmit={(expense) => {
+                onSubmit={(editedExpense) => {
 
-                    console.log('edited expense', expense);
+                    console.log('edited expense', editedExpense);
 
-                    const editActionObj = dispatch(editExpense(expense.id, expense));
+                    const editActionObj = dispatch(editExpense(expense.id, editedExpense));
                     console.log('edit action obj', editActionObj);
 
                     history.push('/');

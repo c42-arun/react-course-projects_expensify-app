@@ -1,10 +1,13 @@
+import moment from 'moment';
+
 export default (expenses, { startDate, endDate, text, sortBy }) => {
-    return expenses.filter(e => {
-        const startDateMatch = typeof startDate !== 'number' || e.createdAt >= startDate;
-        const endDateMatch = typeof endDate !== 'number' || e.createdAt <= endDate;
+    return expenses.filter(expense => {
+        const createdAt = moment(expense.createdAt);
+        const startDateMatch = startDate ? startDate.isSameOrBefore(createdAt, 'day') : true;
+        const endDateMatch = endDate ? endDate.isSameOrAfter(createdAt, 'day') : true;
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
         const textMatch = typeof text !== 'string' || text.length === 0
-            || e.description.toLowerCase().includes(text.toLowerCase());
+            || expense.description.toLowerCase().includes(text.toLowerCase());
 
         return startDateMatch && endDateMatch && textMatch;
     }).sort((a, b) => {
