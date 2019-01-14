@@ -10,10 +10,15 @@ const EditExpensePage = (props) => {
     return (
         <div>
             Now editing expense with id {props.match.params.id}
-            <ExpenseForm 
-                expense={props.expense} 
+            <ExpenseForm
+                expense={props.expense}
                 onSubmit={(expense) => {
+
                     console.log('edited expense', expense);
+
+                    const editActionObj = props.dispatch(editExpense(props.expense.id, expense));
+                    console.log('edit action obj', editActionObj);
+
                     props.history.push('/');
                 }}
             />
