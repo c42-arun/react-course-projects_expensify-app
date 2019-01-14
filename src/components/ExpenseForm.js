@@ -2,8 +2,16 @@ import React from 'react';
 import moment from 'moment'; // SingleDatePicker API works with moment dates
 import { SingleDatePicker } from 'react-dates'; // https://github.com/airbnb/react-dates
 import 'react-dates/lib/css/_datepicker.css'; // CSS for SingleDatePicker
+import { connect } from 'react-redux';
 
-export default class ExpenseForm extends React.Component {
+import { addExpense } from '../actions/expenses';
+
+class ExpenseForm extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+    
     state = {
         description: '',
         note: '',
@@ -35,10 +43,19 @@ export default class ExpenseForm extends React.Component {
 
     onDateChange = createdAt => this.setState({ createdAt });
 
+    onSubmit = (f) => {
+        f.preventDefault();
+
+        this.props.dispatch(addExpense({
+            ...this.state,
+            createdAt: this.state.createdAt.valueOf()
+        }));
+    };
+
     render() {
         return (
             <div>
-                <form>
+                <form onSubmit={this.onSubmit}>
                     <input
                         type="text"
                         placeholder="Description"
@@ -72,3 +89,5 @@ export default class ExpenseForm extends React.Component {
         );
     };
 }
+
+export default connect()(ExpenseForm);
