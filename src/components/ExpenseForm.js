@@ -7,33 +7,16 @@ export default class ExpenseForm extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(props);
+
+        this.state = {
+            description: props.expense ? props.expense.description : '',
+            note: props.expense ? props.expense.note : '',
+            amount: props.expense ? (props.expense.amount / 100).toString() : '',
+            createdAt: props.expense ? moment(props.expense.createdAt) : moment(), // initialize with moment object representing today's date (as reqd by SingleDatePicker below)
+            calendarFocused: false, // required by SingleDatePicker to show/hide the calendar - hidden to start with
+            error: ''
+        };
     }
-
-    componentDidMount() {
-        console.log(this.props);
-
-        if (this.props.expense && this.props.expense.length === 1) {
-
-            const editExpense = this.props.expense[0];
-
-            this.setState(() => ({
-                description: editExpense.description,
-                amount: (editExpense.amount/100).toString(),
-                createdAt: moment(editExpense.createdAt),
-                note: editExpense.note
-            }));           
-        }
-    }
-    
-    state = {
-        description: '',
-        note: '',
-        amount:'',
-        createdAt: moment(), // initialize with moment object representing today's date (as reqd by SingleDatePicker below)
-        calendarFocused: false, // required by SingleDatePicker to show/hide the calendar - hidden to start with
-        error: ''
-    };
 
     onDescriptionChange = (e) => {
         const description = e.target.value;
@@ -62,7 +45,7 @@ export default class ExpenseForm extends React.Component {
         e.preventDefault();
 
         if (!this.state.description || !this.state.amount) {
-            this.setState(() => ({ error: 'Please enter description and amount'}));
+            this.setState(() => ({ error: 'Please enter description and amount' }));
         } else {
             this.setState(() => ({ error: '' }));
 

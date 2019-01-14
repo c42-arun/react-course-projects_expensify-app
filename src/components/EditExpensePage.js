@@ -2,21 +2,30 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import ExpenseForm from './ExpenseForm';
+import { editExpense } from '../actions/expenses';
 
 const EditExpensePage = (props) => {
     console.log(props);
-    console.log(props.expenses.filter(exp => exp.id === props.match.params.id));
+    console.log(props.expense);
     return (
         <div>
             Now editing expense with id {props.match.params.id}
-            <ExpenseForm expense={props.expenses.filter(exp => exp.id === props.match.params.id)} />
+            <ExpenseForm 
+                expense={props.expense} 
+                onSubmit={(expense) => {
+                    console.log('edited expense', expense);
+                    props.history.push('/');
+                }}
+            />
         </div>
     );
 };
 
-const mapStateToProps = (state) => (
+// has access to props passed to the HOC (from the Router in this case)
+// - that would be merged with the object we return here and passed to the wrapped component 
+const mapStateToProps = (state, props) => (
     {
-        expenses: state.expenses
+        expense: state.expenses.find(expense => expense.id === props.match.params.id)
     }
 );
 
