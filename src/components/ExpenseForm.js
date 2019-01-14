@@ -2,11 +2,8 @@ import React from 'react';
 import moment from 'moment'; // SingleDatePicker API works with moment dates
 import { SingleDatePicker } from 'react-dates'; // https://github.com/airbnb/react-dates
 import 'react-dates/lib/css/_datepicker.css'; // CSS for SingleDatePicker
-import { connect } from 'react-redux';
 
-import { addExpense } from '../actions/expenses';
-
-class ExpenseForm extends React.Component {
+export default class ExpenseForm extends React.Component {
 
     constructor(props) {
         super(props);
@@ -18,6 +15,7 @@ class ExpenseForm extends React.Component {
         amount:'',
         createdAt: moment(), // initialize with moment object representing today's date (as reqd by SingleDatePicker below)
         calendarFocused: false, // required by SingleDatePicker to show/hide the calendar - hidden to start with
+        error: ''
     };
 
     onDescriptionChange = (e) => {
@@ -43,18 +41,28 @@ class ExpenseForm extends React.Component {
 
     onDateChange = createdAt => this.setState({ createdAt });
 
-    onSubmit = (f) => {
-        f.preventDefault();
+    onSubmit = (e) => {
+        e.preventDefault();
 
-        this.props.dispatch(addExpense({
-            ...this.state,
-            createdAt: this.state.createdAt.valueOf()
-        }));
+        if (!this.state.description || !this.state.amount) {
+            this.setState(() => ({ error: 'Please enter description and amount'}));
+        } else {
+            this.setState(() => ({ error: '' }));
+
+            // raise onSubmit event passing an expense object
+            this.props.onSubmit({
+                description: this.state.description,
+                amount: parseFloat(this.state.amount, 10) * 100, // parse the string and convert to pence
+                createdAt: this.state.createdAt.valueOf(),
+                note: this.state.note
+            });
+        }
     };
 
     render() {
         return (
             <div>
+                {this.state.error && <p>{this.state.error}</p>}
                 <form onSubmit={this.onSubmit}>
                     <input
                         type="text"
@@ -89,5 +97,3 @@ class ExpenseForm extends React.Component {
         );
     };
 }
-
-export default connect()(ExpenseForm);
