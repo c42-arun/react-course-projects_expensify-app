@@ -7,6 +7,23 @@ export default class ExpenseForm extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(props);
+    }
+
+    componentDidMount() {
+        console.log(this.props);
+
+        if (this.props.expense && this.props.expense.length === 1) {
+
+            const editExpense = this.props.expense[0];
+
+            this.setState(() => ({
+                description: editExpense.description,
+                amount: (editExpense.amount/100).toString(),
+                createdAt: moment(editExpense.createdAt),
+                note: editExpense.note
+            }));           
+        }
     }
     
     state = {

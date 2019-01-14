@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
@@ -12,7 +13,7 @@ Task: To get 'Remove' button to remove this expense from state
 const ExpenseListItem = ({ id, description, amount, createdAt, dispatch }) => (
     <div>
         <h3>
-            {description}
+            <Link to={`/edit/${id}`}>{description}</Link>
         </h3>
         <p>
             {amount} - {moment(createdAt).format('MMM Do, YYYY')}
